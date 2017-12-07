@@ -209,8 +209,8 @@ public class ValidatorMap {
         String validatorId = getValidatorIdFromServiceProperties(properties, validator.getClass(), serviceReference);
         return remove(validatorId, serviceReference);
     }
-    
-    public boolean remove(String id, ServiceReference<Validator<?>> serviceReference) {
+
+    boolean remove(String id, ServiceReference<Validator<?>> serviceReference) {
         // only actually remove if the service reference is equal
         if (id == null) {
             // find by service reference
@@ -222,6 +222,7 @@ public class ValidatorMap {
         } else {
             // only actually remove if the service reference is equal
             if (entry.serviceReference.equals(serviceReference)) {
+                //validatorMap.remove(id);
                 return true;
             } else {
                 LOG.warn("Could not remove validator with id '{}' from map because it is only contained with a different service reference!", id);

@@ -107,4 +107,11 @@ public class ValidatorMapTest {
         // make sure that the old validator id is no longer in the list
         Assert.assertNull(validatorMap.get(DATE_VALIDATOR_ID));
     }
+
+    @Test
+    public void testRemoveValidator() {
+        Assert.assertTrue("Previously bound validator could not be removed", validatorMap.remove(DATE_VALIDATOR_ID, validatorServiceReference));
+        // make sure that the old validator id is no longer in the list
+        Assert.assertNull("Could not remove previously bound validator", validatorMap.get(DATE_VALIDATOR_ID));
+    }
 }
