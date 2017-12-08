@@ -260,6 +260,7 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.tools</artifactId>
+            <!-- we need the latest snapshot due to switch to commons-johnzon in https://github.com/apache/sling-old-svn-mirror/commit/862cf2c34e306ac52e8b27fc62a0a5a5458e94c1#diff-80bdb2d8d02d199be853b4a26d559391 -->
             <version>1.0.17-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
