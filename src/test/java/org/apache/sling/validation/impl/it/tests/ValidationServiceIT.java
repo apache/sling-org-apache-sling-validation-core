@@ -65,6 +65,8 @@ public class ValidationServiceIT {
         // also wait for the test-services to be active, see https://issues.apache.org/jira/browse/SLING-7297
         // we cannot explicitly wait for that, but waiting until the bundle has been started should be enough here
         slingClient.waitStartBundle("org.apache.sling.validation.test-services", 10000, 100);
+        // plus a little sleep time
+        Thread.sleep(2000);
     }
 
     @Test
