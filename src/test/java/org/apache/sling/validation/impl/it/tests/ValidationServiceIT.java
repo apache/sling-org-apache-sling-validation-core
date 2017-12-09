@@ -18,77 +18,75 @@
  */
 package org.apache.sling.validation.impl.it.tests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
+import java.util.Collections;
+import java.util.concurrent.TimeoutException;
 
 import javax.json.Json;
 import javax.json.JsonException;
 import javax.json.JsonObject;
 
-import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.Header;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
 import org.apache.sling.servlets.post.SlingPostConstants;
-import org.apache.sling.testing.tools.http.RequestBuilder;
-import org.apache.sling.testing.tools.http.RequestExecutor;
-import org.junit.Before;
+import org.apache.sling.testing.clients.ClientException;
+import org.apache.sling.testing.clients.SlingHttpResponse;
+import org.apache.sling.testing.clients.osgi.OsgiConsoleClient;
+import org.apache.sling.validation.testservices.internal.ValidationPostOperation;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.ops4j.pax.exam.junit.PaxExam;
-import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
-import org.ops4j.pax.exam.spi.reactors.PerClass;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * These tests leverage the {@link ValidationPostOperation} to validate the given request parameters.
  * The according validation model enforces the properties "field1" matching regex=^\\\p{Upper}+$ and "field2" (having an arbitrary value).
  *
  */
-@RunWith(PaxExam.class)
-@ExamReactorStrategy(PerClass.class)
-public class ValidationServiceIT extends ValidationTestSupport {
+public class ValidationServiceIT {
 
-    protected DefaultHttpClient defaultHttpClient;
+    private static OsgiConsoleClient slingClient;
 
-    protected RequestExecutor requestExecutor;
-
-    @Before
-    public void setup() throws IOException {
-        defaultHttpClient = new DefaultHttpClient();
-        requestExecutor = new RequestExecutor(defaultHttpClient);
+    @BeforeClass
+    public static void setupOnce() throws IOException, ClientException, TimeoutException, InterruptedException {
+        URI uri = URI.create(String.format("http://localhost:%s", Integer.getInteger("http.port")));
+        slingClient = new OsgiConsoleClient(uri, "admin", "admin");
+        // wait until the model from the validation.test-services bundle has been deployed
+        slingClient.waitExists("/apps/sling/validation/models/model1", 20000, 200);
+        
+        // also wait for the test-services to be active, see https://issues.apache.org/jira/browse/SLING-7297
+        // we cannot explicitly wait for that, but waiting until the bundle has been started should be enough here
+        slingClient.waitStartBundle("org.apache.sling.validation.test-services", 10000, 100);
     }
 
     @Test
-    public void testValidRequestModel1() throws IOException, JsonException {
-        final String url = String.format("http://localhost:%s", httpPort());
-        final RequestBuilder requestBuilder = new RequestBuilder(url);
-        MultipartEntity entity = new MultipartEntity();
-        entity.addPart("sling:resourceType", new StringBody("validation/test/resourceType1"));
-        entity.addPart("field1", new StringBody("HELLOWORLD"));
-        entity.addPart("field2", new StringBody("30.01.1988"));
-        entity.addPart(SlingPostConstants.RP_OPERATION, new StringBody("validation"));
-        RequestExecutor re = requestExecutor.execute(requestBuilder.buildPostRequest
-                ("/validation/testing/fakeFolder1/resource").withEntity(entity)).assertStatus(200);
-        String content = re.getContent();
-        JsonObject jsonResponse = Json.createReader(new StringReader(content)).readObject();
+    public void testValidRequestModel1() throws IOException, JsonException, ClientException {
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+        entityBuilder.addPart("sling:resourceType", new StringBody("validation/test/resourceType1", ContentType.DEFAULT_TEXT));
+        entityBuilder.addPart("field1", new StringBody("HELLOWORLD", ContentType.DEFAULT_TEXT));
+        entityBuilder.addPart("field2", new StringBody("30.01.1988", ContentType.DEFAULT_TEXT));
+        entityBuilder.addPart(SlingPostConstants.RP_OPERATION, new StringBody("validation", ContentType.DEFAULT_TEXT));
+        SlingHttpResponse response = slingClient.doPost("/validation/testing/fakeFolder1/resource", entityBuilder.build(), null, 200);
+        JsonObject jsonResponse = Json.createReader(new StringReader(response.getContent())).readObject();
         assertTrue(jsonResponse.getBoolean("valid"));
     }
 
     @Test
-    public void testInvalidRequestModel1() throws IOException, JsonException {
-        MultipartEntity entity = new MultipartEntity();
-        entity.addPart("sling:resourceType", new StringBody("validation/test/resourceType1"));
-        entity.addPart("field1", new StringBody("Hello World"));
-        entity.addPart(SlingPostConstants.RP_OPERATION, new StringBody("validation"));
-        final String url = String.format("http://localhost:%s", httpPort());
-        RequestBuilder requestBuilder = new RequestBuilder(url);
-        RequestExecutor re = requestExecutor.execute(requestBuilder.buildPostRequest
-                ("/validation/testing/fakeFolder1/resource").withEntity(entity)).assertStatus(200);
-        String content = re.getContent();
-        JsonObject jsonResponse = Json.createReader(new StringReader(content)).readObject();
+    public void testInvalidRequestModel1() throws IOException, JsonException, ClientException {
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+        entityBuilder.addPart("sling:resourceType", new StringBody("validation/test/resourceType1", ContentType.DEFAULT_TEXT));
+        entityBuilder.addPart("field1", new StringBody("Hello World", ContentType.DEFAULT_TEXT));
+        entityBuilder.addPart(SlingPostConstants.RP_OPERATION, new StringBody("validation", ContentType.DEFAULT_TEXT));
+        SlingHttpResponse response = slingClient.doPost("/validation/testing/fakeFolder1/resource", entityBuilder.build(), null, 200);
+        JsonObject jsonResponse = Json.createReader(new StringReader(response.getContent())).readObject();
         assertFalse(jsonResponse.getBoolean("valid"));
         JsonObject failure = jsonResponse.getJsonArray("failures").getJsonObject(0);
         assertEquals("Property does not match the pattern \"^\\p{Upper}+$\".", failure.getString("message"));
@@ -99,20 +97,15 @@ public class ValidationServiceIT extends ValidationTestSupport {
         assertEquals("", failure.getString("location")); // location is empty as the property is not found (property name is part of the message rather)
         assertEquals(0, failure.getInt("severity"));
     }
-    
+
     @Test
-    public void testPostProcessorWithInvalidModel() throws IOException, JsonException {
-        MultipartEntity entity = new MultipartEntity();
-        entity.addPart("sling:resourceType", new StringBody("validation/test/resourceType1"));
-        entity.addPart("field1", new StringBody("Hello World"));
-        final String url = String.format("http://localhost:%s", httpPort());
-        RequestBuilder requestBuilder = new RequestBuilder(url);
-        // test JSON response, because the HTML response overwrites the original exception (https://issues.apache.org/jira/browse/SLING-6703)
-        RequestExecutor re = requestExecutor.execute(requestBuilder.buildPostRequest
-                ("/content/validated/invalidresource").withEntity(entity).withHeader("Accept", "application/json").withCredentials("admin", "admin")).assertStatus(500);
-        String content = re.getContent();
-        JsonObject jsonResponse = Json.createReader(new StringReader(content)).readObject();
-        
+    public void testPostProcessorWithInvalidModel() throws IOException, JsonException, ClientException {
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+        entityBuilder.addPart("sling:resourceType", new StringBody("validation/test/resourceType1", ContentType.DEFAULT_TEXT));
+        entityBuilder.addPart("field1", new StringBody("Hello World", ContentType.DEFAULT_TEXT));
+        Header header = new BasicHeader("Accept", "application/json");
+        SlingHttpResponse response = slingClient.doPost("/content/validated/invalidresource", entityBuilder.build(), Collections.singletonList(header), 500);
+        JsonObject jsonResponse = Json.createReader(new StringReader(response.getContent())).readObject();
         JsonObject error = jsonResponse.getJsonObject("error");
         assertEquals("org.apache.sling.validation.impl.postprocessor.InvalidResourcePostProcessorException", error.getString("class"));
         assertEquals("Validation errors: field1 : Property does not match the pattern \"^\\p{Upper}+$\"., Missing required property with name \"field2\".", error.getString("message"));
