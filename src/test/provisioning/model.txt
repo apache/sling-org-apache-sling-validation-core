@@ -23,7 +23,7 @@
   # deploy the to-be-tested bundle as well
   org.apache.sling/org.apache.sling.validation.core/1.0.1-SNAPSHOT
   # deploy an additional bundle which contains some server-side test classes and content
-  org.apache.sling/org.apache.sling.validation.test-services/1.0.1-SNAPSHOT
+  org.apache.sling/org.apache.sling.validation.test-services/1.0.2
 
 [configurations]
   # configure service user mapping for validation framework
