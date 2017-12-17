@@ -20,10 +20,12 @@
 # Dependencies
 [artifacts]
   org.apache.sling/org.apache.sling.launchpad/9/slingstart
-  # deploy the to-be-tested bundle as well
-  org.apache.sling/org.apache.sling.validation.core/1.0.3-SNAPSHOT
+  # the following additional bundles have their versions specified in the pom.xml
+  # this assures that the IT always runs against the right version
+  org.apache.sling/org.apache.sling.validation.core
+  org.apache.sling/org.apache.sling.validation.api
   # deploy an additional bundle which contains some server-side test classes and content
-  org.apache.sling/org.apache.sling.validation.test-services/1.0.3-SNAPSHOT
+  org.apache.sling/org.apache.sling.validation.test-services
 
 [configurations]
   # configure service user mapping for validation framework

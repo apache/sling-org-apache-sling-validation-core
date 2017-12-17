@@ -59,14 +59,13 @@ public class ValidationServiceIT {
     public static void setupOnce() throws IOException, ClientException, TimeoutException, InterruptedException {
         URI uri = URI.create(String.format("http://localhost:%s", Integer.getInteger("http.port")));
         slingClient = new OsgiConsoleClient(uri, "admin", "admin");
+        
         // wait until the model from the validation.test-services bundle has been deployed
         slingClient.waitExists("/apps/sling/validation/models/model1", 20000, 200);
         
-        // also wait for the test-services to be active, see https://issues.apache.org/jira/browse/SLING-7297
-        // we cannot explicitly wait for that, but waiting until the bundle has been started should be enough here
-        slingClient.waitStartBundle("org.apache.sling.validation.test-services", 10000, 100);
-        // plus a little sleep time
-        Thread.sleep(2000);
+        // also wait for the contained OSGi services to be registered, (see https://issues.apache.org/jira/browse/SLING-7297)
+        // since this is not yet supported in a release version just wait wait until all services came up as well by adding a little sleep time on top
+        Thread.sleep(4000);
     }
 
     @Test

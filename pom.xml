@@ -85,6 +85,7 @@
                 <!-- the Sling instance is provisioned from the model in src/main/provisioning/model.txt -->
                 <groupId>org.apache.sling</groupId>
                 <artifactId>slingstart-maven-plugin</artifactId>
+                <version>1.7.14</version>
                 <extensions>true</extensions>
                 <executions>
                     <execution>
@@ -100,6 +101,9 @@
                             <goal>package</goal>
                         </goals>
                         <phase>pre-integration-test</phase>
+                        <configuration>
+                            <attachArtifact>false</attachArtifact>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>start-container-before-IT</id>
@@ -131,6 +135,7 @@
                     </servers>
                     <!-- this configuration only applies to 'prepare-package' and 'package' -->
                     <disableExtendingMavenClasspath>true</disableExtendingMavenClasspath>
+                    <usePomDependencies>true</usePomDependencies>
                 </configuration>
             </plugin>
             <plugin>
@@ -246,13 +251,13 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.validation.test-services</artifactId>
-            <version>1.0.3-SNAPSHOT</version>
+            <version>1.0.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.testing.clients</artifactId>
-            <version>1.1.4</version>
+            <version>1.1.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
