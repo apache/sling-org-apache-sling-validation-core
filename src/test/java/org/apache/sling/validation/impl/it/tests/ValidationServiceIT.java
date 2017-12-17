@@ -65,7 +65,7 @@ public class ValidationServiceIT {
         
         // also wait for the contained OSGi services to be registered, (see https://issues.apache.org/jira/browse/SLING-7297)
         // since this is not yet supported in a release version just wait wait until all services came up as well by adding a little sleep time on top
-        Thread.sleep(4000);
+        Thread.sleep(2000);
     }
 
     @Test
