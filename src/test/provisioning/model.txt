@@ -16,7 +16,9 @@
 #  specific language governing permissions and limitations
 #  under the License.
 #
-[feature name=validation.core.it]
+
+# must be the same feature name as the feature defined in slingstart to allow merging
+[feature name=sling-validation]
 # Dependencies
 [artifacts]
   org.apache.sling/org.apache.sling.launchpad/9/slingstart
