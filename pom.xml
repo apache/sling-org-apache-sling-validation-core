@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.apache.sling</groupId>
         <artifactId>sling</artifactId>
-        <version>32</version>
+        <version>33</version>
         <relativePath />
     </parent>
 
@@ -85,7 +85,6 @@
                 <!-- the Sling instance is provisioned from the model in src/main/provisioning/model.txt -->
                 <groupId>org.apache.sling</groupId>
                 <artifactId>slingstart-maven-plugin</artifactId>
-                <version>1.7.14</version>
                 <extensions>true</extensions>
                 <executions>
                     <execution>
