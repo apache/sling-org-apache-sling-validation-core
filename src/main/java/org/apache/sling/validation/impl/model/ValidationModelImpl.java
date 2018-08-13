@@ -23,19 +23,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.validation.model.ChildResource;
 import org.apache.sling.validation.model.ResourceProperty;
 import org.apache.sling.validation.model.ValidationModel;
+import org.jetbrains.annotations.NotNull;
 
 public class ValidationModelImpl implements ValidationModel {
 
-    private final @Nonnull List<ResourceProperty> resourceProperties;
-    private final @Nonnull String validatedResourceType;
-    private final @Nonnull Collection<String> applicablePaths;
-    private final @Nonnull List<ChildResource> children;
-    private final @Nonnull String source;
+    private final @NotNull List<ResourceProperty> resourceProperties;
+    private final @NotNull String validatedResourceType;
+    private final @NotNull Collection<String> applicablePaths;
+    private final @NotNull List<ChildResource> children;
+    private final @NotNull String source;
 
     /**
      * Only used from {@link ValidationModelBuilder}
@@ -46,8 +45,8 @@ public class ValidationModelImpl implements ValidationModel {
      * @param children
      * @param source a string identifying the model's source (e.g. a resource path)
      */
-    ValidationModelImpl(@Nonnull List<ResourceProperty> resourceProperties, @Nonnull String validatedResourceType,
-                              Collection<String> applicablePaths, @Nonnull List<ChildResource> children, @Nonnull String source) {
+    ValidationModelImpl(@NotNull List<ResourceProperty> resourceProperties, @NotNull String validatedResourceType,
+                              Collection<String> applicablePaths, @NotNull List<ChildResource> children, @NotNull String source) {
         this.resourceProperties = new ArrayList<>(resourceProperties);
         this.validatedResourceType = validatedResourceType;
         
@@ -65,27 +64,27 @@ public class ValidationModelImpl implements ValidationModel {
     }
 
     @Override
-    public @Nonnull List<ResourceProperty> getResourceProperties() {
+    public @NotNull List<ResourceProperty> getResourceProperties() {
         return resourceProperties;
     }
 
     @Override
-    public @Nonnull String getValidatingResourceType() {
+    public @NotNull String getValidatingResourceType() {
         return validatedResourceType;
     }
 
     @Override
-    public @Nonnull Collection<String> getApplicablePaths() {
+    public @NotNull Collection<String> getApplicablePaths() {
         return applicablePaths;
     }
 
     @Override
-    public @Nonnull List<ChildResource> getChildren() {
+    public @NotNull List<ChildResource> getChildren() {
         return children;
     }
 
     @Override
-    public @Nonnull String getSource() {
+    public @NotNull String getSource() {
         return source;
     }
 

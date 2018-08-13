@@ -22,11 +22,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.validation.model.ChildResource;
 import org.apache.sling.validation.model.ResourceProperty;
 import org.apache.sling.validation.model.ValidationModel;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Generates a merged validation model out of one base {@link ValidationModel} and 1 or more models to merge.
@@ -41,7 +40,7 @@ public class MergedValidationModel implements ValidationModel {
     private final ValidationModel baseModel;
     private final Map<String, ResourceProperty> resourcePropertiesMap;
     private final Map<String, ChildResource> childResourceMap;
-    private final @Nonnull String source;
+    private final @NotNull String source;
     
     public MergedValidationModel(ValidationModel baseModel, ValidationModel... modelsToMerge) {
         this.baseModel = baseModel;
@@ -97,31 +96,31 @@ public class MergedValidationModel implements ValidationModel {
     }
     
     @Override
-    @Nonnull
+    @NotNull
     public Collection<ResourceProperty> getResourceProperties() {
         return resourcePropertiesMap.values();
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getValidatingResourceType() {
         return baseModel.getValidatingResourceType();
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public Collection<String> getApplicablePaths() {
         return baseModel.getApplicablePaths();
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public Collection<ChildResource> getChildren() {
         return childResourceMap.values();
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getSource() {
         return source;
     }

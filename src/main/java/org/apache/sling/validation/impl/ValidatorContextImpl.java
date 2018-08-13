@@ -20,22 +20,21 @@ package org.apache.sling.validation.impl;
 
 import java.util.ResourceBundle;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.validation.spi.ValidatorContext;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ValidatorContextImpl implements ValidatorContext {
 
-    private final @Nonnull String location;
+    private final @NotNull String location;
     private final int severity;
-    private final @Nonnull ValueMap valueMap;
+    private final @NotNull ValueMap valueMap;
     private final Resource resource;
-    private final @Nonnull ResourceBundle defaultResourceBundle;
+    private final @NotNull ResourceBundle defaultResourceBundle;
 
-    public ValidatorContextImpl(@Nonnull String location, int severity, @Nonnull ValueMap valueMap, Resource resource, @Nonnull ResourceBundle defaultResourceBundle) {
+    public ValidatorContextImpl(@NotNull String location, int severity, @NotNull ValueMap valueMap, Resource resource, @NotNull ResourceBundle defaultResourceBundle) {
         super();
         this.location = location;
         this.severity = severity;
@@ -45,19 +44,19 @@ public class ValidatorContextImpl implements ValidatorContext {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public String getLocation() {
         return location;
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public ValueMap getValueMap() {
         return valueMap;
     }
 
     @Override
-    @CheckForNull
+    @Nullable
     public Resource getResource() {
         return resource;
     }
@@ -68,7 +67,7 @@ public class ValidatorContextImpl implements ValidatorContext {
     }
 
     @Override
-    public @Nonnull ResourceBundle getDefaultResourceBundle() {
+    public @NotNull ResourceBundle getDefaultResourceBundle() {
         return defaultResourceBundle;
     }
 

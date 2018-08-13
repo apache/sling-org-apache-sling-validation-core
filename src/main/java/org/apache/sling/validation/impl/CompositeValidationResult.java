@@ -24,12 +24,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.validation.ValidationFailure;
 import org.apache.sling.validation.ValidationResult;
 import org.apache.sling.validation.spi.Validator;
 import org.apache.sling.validation.spi.support.DefaultValidationResult;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Aggregates multiple {@link ValidationResult}s. Should not be from {@link Validator}s.
@@ -40,17 +39,17 @@ public class CompositeValidationResult implements ValidationResult, Serializable
      * 
      */
     private static final long serialVersionUID = -1019113908128276733L;
-    private final @Nonnull List<ValidationResult> results;
+    private final @NotNull List<ValidationResult> results;
 
     public CompositeValidationResult() {
         results = new ArrayList<ValidationResult>();
     }
 
-    public void addValidationResult(@Nonnull ValidationResult result) {
+    public void addValidationResult(@NotNull ValidationResult result) {
         results.add(result);
     }
 
-    public void addFailure(@Nonnull String location, int severity, @Nonnull ResourceBundle defaultResourceBundle, @Nonnull String message, Object... messageArguments) {
+    public void addFailure(@NotNull String location, int severity, @NotNull ResourceBundle defaultResourceBundle, @NotNull String message, Object... messageArguments) {
         results.add(new DefaultValidationResult(location, severity, defaultResourceBundle, message, messageArguments));
     }
 
@@ -68,7 +67,7 @@ public class CompositeValidationResult implements ValidationResult, Serializable
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public List<ValidationFailure> getFailures() {
         List<ValidationFailure> failures = new LinkedList<ValidationFailure>();
         for (ValidationResult result : results) {

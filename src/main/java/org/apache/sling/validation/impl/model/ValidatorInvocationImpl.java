@@ -20,16 +20,15 @@ package org.apache.sling.validation.impl.model;
 
 import java.util.Map;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.api.wrappers.ValueMapDecorator;
 import org.apache.sling.validation.model.ValidatorInvocation;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ValidatorInvocationImpl implements ValidatorInvocation {
-    private final @Nonnull String id; 
-    private final @Nonnull Map<String, Object> parameters;
+    private final @NotNull String id; 
+    private final @NotNull Map<String, Object> parameters;
     private final Integer severity;
     
     /**
@@ -39,7 +38,7 @@ public class ValidatorInvocationImpl implements ValidatorInvocation {
      * @param parameters
      * @param severity
      */
-    public ValidatorInvocationImpl(@Nonnull String id, @Nonnull Map<String, Object> parameters, Integer severity) {
+    public ValidatorInvocationImpl(@NotNull String id, @NotNull Map<String, Object> parameters, Integer severity) {
         super();
         this.id = id;
         this.parameters = parameters;
@@ -53,12 +52,12 @@ public class ValidatorInvocationImpl implements ValidatorInvocation {
     }
 
     @Override
-    public @Nonnull ValueMap getParameters() {
+    public @NotNull ValueMap getParameters() {
         return new ValueMapDecorator(parameters);
     }
 
     @Override
-    @CheckForNull
+    @Nullable
     public Integer getSeverity() {
         return severity;
     }

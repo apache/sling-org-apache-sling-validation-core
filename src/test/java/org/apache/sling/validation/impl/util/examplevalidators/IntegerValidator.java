@@ -18,19 +18,18 @@
  */
 package org.apache.sling.validation.impl.util.examplevalidators;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.validation.ValidationResult;
 import org.apache.sling.validation.SlingValidationException;
 import org.apache.sling.validation.spi.ValidatorContext;
 import org.apache.sling.validation.spi.Validator;
 import org.apache.sling.validation.spi.support.DefaultValidationResult;
+import org.jetbrains.annotations.NotNull;
 
 public class IntegerValidator implements Validator<Integer> {
 
     @Override
-    public @Nonnull ValidationResult validate(@Nonnull Integer data, @Nonnull ValidatorContext context, @Nonnull ValueMap arguments)
+    public @NotNull ValidationResult validate(@NotNull Integer data, @NotNull ValidatorContext context, @NotNull ValueMap arguments)
             throws SlingValidationException {
         return DefaultValidationResult.VALID;
     }

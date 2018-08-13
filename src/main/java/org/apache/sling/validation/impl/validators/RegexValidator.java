@@ -21,8 +21,6 @@ package org.apache.sling.validation.impl.validators;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.validation.SlingValidationException;
@@ -30,6 +28,7 @@ import org.apache.sling.validation.ValidationResult;
 import org.apache.sling.validation.spi.ValidatorContext;
 import org.apache.sling.validation.spi.Validator;
 import org.apache.sling.validation.spi.support.DefaultValidationResult;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -39,11 +38,11 @@ import org.osgi.service.component.annotations.Component;
 @Component(property=Validator.PROPERTY_VALIDATOR_ID+"=org.apache.sling.validation.core.RegexValidator")
 public class RegexValidator implements Validator<String> {
 
-    public static final @Nonnull String I18N_KEY_PATTERN_DOES_NOT_MATCH = "sling.validator.regex.pattern-does-not-match";
-    public static final @Nonnull String REGEX_PARAM = "regex";
+    public static final @NotNull String I18N_KEY_PATTERN_DOES_NOT_MATCH = "sling.validator.regex.pattern-does-not-match";
+    public static final @NotNull String REGEX_PARAM = "regex";
 
     @Override
-    public @Nonnull ValidationResult validate(@Nonnull String data, @Nonnull ValidatorContext context, @Nonnull ValueMap arguments)
+    public @NotNull ValidationResult validate(@NotNull String data, @NotNull ValidatorContext context, @NotNull ValueMap arguments)
             throws SlingValidationException {
         String regex = arguments.get(REGEX_PARAM, "");
         if (StringUtils.isEmpty(regex)) {

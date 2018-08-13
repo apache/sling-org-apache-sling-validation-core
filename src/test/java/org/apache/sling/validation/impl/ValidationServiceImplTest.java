@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
 import javax.jcr.RepositoryException;
 
 import org.apache.jackrabbit.JcrConstants;
@@ -61,6 +59,8 @@ import org.apache.sling.validation.spi.Validator;
 import org.apache.sling.validation.spi.support.DefaultValidationFailure;
 import org.apache.sling.validation.spi.support.DefaultValidationResult;
 import org.hamcrest.Matchers;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -176,7 +176,7 @@ public class ValidationServiceImplTest {
     public void testValidateNeverCalledWithNullValues() throws Exception {
         Validator<String> myValidator = new Validator<String>() {
             @Override
-            public @Nonnull ValidationResult validate(@Nonnull String data, @Nonnull ValidatorContext context, @Nonnull ValueMap arguments)
+            public @NotNull ValidationResult validate(@NotNull String data, @NotNull ValidatorContext context, @NotNull ValueMap arguments)
                     throws SlingValidationException {
                 Assert.assertNotNull("data parameter for validate should never be null", data);
                 Assert.assertNotNull("location of context parameter for validate should never be null", context.getLocation());
@@ -393,8 +393,8 @@ public class ValidationServiceImplTest {
     public void testResourceWithValidatorLeveragingTheResource() throws Exception {
         Validator<String> extendedValidator = new Validator<String>() {
             @Override
-            @Nonnull
-            public ValidationResult validate(@Nonnull String data, @Nonnull ValidatorContext context, @Nonnull ValueMap arguments)
+            @NotNull
+            public ValidationResult validate(@NotNull String data, @NotNull ValidatorContext context, @NotNull ValueMap arguments)
                     throws SlingValidationException {
                 Resource resource = context.getResource();
                 if (resource == null) {
@@ -520,7 +520,7 @@ public class ValidationServiceImplTest {
         validationService.modelRetriever = new ValidationModelRetriever() {
 
             @Override
-            public @CheckForNull ValidationModel getValidationModel(@Nonnull String resourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
+            public @Nullable ValidationModel getValidationModel(@NotNull String resourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
                 if (resourceType.equals("resourcetype1")) {
                     return vm1;
                 } else if (resourceType.equals("resourcetype2")) {
@@ -581,7 +581,7 @@ public class ValidationServiceImplTest {
         // set model retriever which never retrieves anything
         validationService.modelRetriever = new ValidationModelRetriever() {
             @Override
-            public @CheckForNull ValidationModel getValidationModel(@Nonnull String resourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
+            public @Nullable ValidationModel getValidationModel(@NotNull String resourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
                 return null;
             }
         };
@@ -599,7 +599,7 @@ public class ValidationServiceImplTest {
         // set model retriever which never retrieves anything
         validationService.modelRetriever = new ValidationModelRetriever() {
             @Override
-            public @CheckForNull ValidationModel getValidationModel(@Nonnull String resourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
+            public @Nullable ValidationModel getValidationModel(@NotNull String resourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
                 return null;
             }
         };

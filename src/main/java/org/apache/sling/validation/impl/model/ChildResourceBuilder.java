@@ -21,19 +21,18 @@ package org.apache.sling.validation.impl.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.validation.model.ChildResource;
 import org.apache.sling.validation.model.ResourceProperty;
+import org.jetbrains.annotations.NotNull;
 
 public class ChildResourceBuilder {
 
     public boolean optional;
     public boolean multiple;
     String nameRegex;
-    @Nonnull
+    @NotNull
     private final List<ResourceProperty> resourceProperties;
-    @Nonnull
+    @NotNull
     private final List<ChildResource> children;
 
     public ChildResourceBuilder() {
@@ -43,17 +42,17 @@ public class ChildResourceBuilder {
         children = new ArrayList<ChildResource>();
     }
 
-    public @Nonnull ChildResourceBuilder nameRegex(String nameRegex) {
+    public @NotNull ChildResourceBuilder nameRegex(String nameRegex) {
         this.nameRegex = nameRegex;
         return this;
     }
 
-    public @Nonnull ChildResourceBuilder optional() {
+    public @NotNull ChildResourceBuilder optional() {
         this.optional = true;
         return this;
     }
 
-    public @Nonnull ChildResource build(@Nonnull String name) {
+    public @NotNull ChildResource build(@NotNull String name) {
         return new ChildResourceImpl(name, nameRegex, !optional, resourceProperties, children);
     }
 }

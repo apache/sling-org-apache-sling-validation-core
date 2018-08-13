@@ -21,11 +21,10 @@ package org.apache.sling.validation.impl.postprocessor;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.validation.ValidationFailure;
 import org.apache.sling.validation.ValidationResult;
+import org.jetbrains.annotations.NotNull;
 
 /** Exception embedding a {@link ValidationResult} from Sling Validation. */
 public class InvalidResourcePostProcessorException extends RuntimeException {
@@ -33,12 +32,12 @@ public class InvalidResourcePostProcessorException extends RuntimeException {
      * 
      */
     private static final long serialVersionUID = 213928457248325245L;
-    private final @Nonnull ValidationResult result;
-    private final @Nonnull ResourceBundle resourceBundle;
+    private final @NotNull ValidationResult result;
+    private final @NotNull ResourceBundle resourceBundle;
     
     private static final String KEY_MESSAGE= "sling.validator.invalid-resource-post-processor-exception";
     
-    public InvalidResourcePostProcessorException(@Nonnull ValidationResult result, ResourceBundle resourceBundle) {
+    public InvalidResourcePostProcessorException(@NotNull ValidationResult result, ResourceBundle resourceBundle) {
         super();
         this.result = result;
         this.resourceBundle = resourceBundle;

@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.apache.sling.api.resource.LoginException;
@@ -40,6 +38,7 @@ import org.apache.sling.validation.model.ValidationModel;
 import org.apache.sling.validation.model.spi.ValidationModelProvider;
 import org.apache.sling.validation.spi.Validator;
 import org.hamcrest.Matchers;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,13 +67,13 @@ public class ValidationModelRetrieverImplTest {
      *
      */
     class TestModelProvider implements ValidationModelProvider {
-        private @Nonnull final String source;
-        public TestModelProvider(@Nonnull String source) {
+        private @NotNull final String source;
+        public TestModelProvider(@NotNull String source) {
             this.source = source;
         }
         
         @Override
-        public @Nonnull List<ValidationModel> getValidationModels(@Nonnull String relativeResourceType) {
+        public @NotNull List<ValidationModel> getValidationModels(@NotNull String relativeResourceType) {
             List<ValidationModel> models = new ArrayList<ValidationModel>();
             Collection<String> applicablePaths = applicablePathPerResourceType.get(relativeResourceType);
             if (applicablePaths != null) {

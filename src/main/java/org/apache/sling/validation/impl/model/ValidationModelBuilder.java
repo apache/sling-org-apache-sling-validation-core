@@ -22,11 +22,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.validation.model.ChildResource;
 import org.apache.sling.validation.model.ResourceProperty;
 import org.apache.sling.validation.model.ValidationModel;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Builder to instantiate a {@link ValidationModel}
@@ -34,9 +33,9 @@ import org.apache.sling.validation.model.ValidationModel;
  */
 public class ValidationModelBuilder {
 
-    private final @Nonnull List<ResourceProperty> resourceProperties;
-    private final @Nonnull List<ChildResource> children;
-    private final @Nonnull Collection<String> applicablePaths;
+    private final @NotNull List<ResourceProperty> resourceProperties;
+    private final @NotNull List<ChildResource> children;
+    private final @NotNull Collection<String> applicablePaths;
     
     public ValidationModelBuilder() {
         resourceProperties = new ArrayList<ResourceProperty>();
@@ -44,45 +43,45 @@ public class ValidationModelBuilder {
         applicablePaths = new ArrayList<>();
     }
     
-    public @Nonnull ValidationModelBuilder resourceProperty(@Nonnull ResourceProperty resourceProperty) {
+    public @NotNull ValidationModelBuilder resourceProperty(@NotNull ResourceProperty resourceProperty) {
         resourceProperties.add(resourceProperty);
         return this;
     }
     
-    public @Nonnull ValidationModelBuilder resourceProperties(@Nonnull List<ResourceProperty> resourceProperties) {
+    public @NotNull ValidationModelBuilder resourceProperties(@NotNull List<ResourceProperty> resourceProperties) {
         this.resourceProperties.addAll(resourceProperties);
         return this;
     }
     
-    public @Nonnull ValidationModelBuilder childResource(@Nonnull ChildResource childResource) {
+    public @NotNull ValidationModelBuilder childResource(@NotNull ChildResource childResource) {
         children.add(childResource);
         return this;
     }
     
-    public @Nonnull ValidationModelBuilder childResources(@Nonnull List<ChildResource> childResources) {
+    public @NotNull ValidationModelBuilder childResources(@NotNull List<ChildResource> childResources) {
         children.addAll(childResources);
         return this;
     }
     
-    public @Nonnull ValidationModelBuilder setApplicablePath(@Nonnull String applicablePath) {
+    public @NotNull ValidationModelBuilder setApplicablePath(@NotNull String applicablePath) {
         applicablePaths.clear();
         applicablePaths.add(applicablePath);
         return this;
     }
     
-    public @Nonnull ValidationModelBuilder addApplicablePath(@Nonnull String applicablePath) {
+    public @NotNull ValidationModelBuilder addApplicablePath(@NotNull String applicablePath) {
         applicablePaths.add(applicablePath);
         return this;
     }
     
-    public @Nonnull ValidationModelBuilder addApplicablePaths(@Nonnull String[] applicablePaths) {
+    public @NotNull ValidationModelBuilder addApplicablePaths(@NotNull String[] applicablePaths) {
         for (String applicablePath : applicablePaths) {
             this.applicablePaths.add(applicablePath);
         }
         return this;
     }
     
-    public @Nonnull ValidationModel build(@Nonnull String validatedResourceType, @Nonnull String source) {
+    public @NotNull ValidationModel build(@NotNull String validatedResourceType, @NotNull String source) {
         return new ValidationModelImpl(resourceProperties, validatedResourceType, applicablePaths, children, source);
     }
 }

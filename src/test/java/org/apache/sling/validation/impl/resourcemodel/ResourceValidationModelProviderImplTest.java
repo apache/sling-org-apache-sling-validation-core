@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.Nonnull;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -58,6 +57,7 @@ import org.apache.sling.validation.model.ValidatorInvocation;
 import org.apache.sling.validation.model.ResourceProperty;
 import org.apache.sling.validation.model.ValidationModel;
 import org.hamcrest.Matchers;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -446,7 +446,7 @@ public class ResourceValidationModelProviderImplTest {
      * @param properties
      * @throws PersistenceException
      */
-    private void createValidationModelProperties(Resource model, @Nonnull Collection<ResourceProperty> properties)
+    private void createValidationModelProperties(Resource model, @NotNull Collection<ResourceProperty> properties)
             throws PersistenceException {
         ResourceResolver rr = model.getResourceResolver();
         if (properties.isEmpty()) {

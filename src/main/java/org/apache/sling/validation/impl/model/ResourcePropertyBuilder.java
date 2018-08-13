@@ -23,17 +23,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.validation.model.ValidatorInvocation;
 import org.apache.sling.validation.model.ResourceProperty;
+import org.jetbrains.annotations.NotNull;
 
 public class ResourcePropertyBuilder {
 
     private boolean optional;
     private boolean multiple;
     private String nameRegex;
-    private final @Nonnull List<ValidatorInvocation> validators;
+    private final @NotNull List<ValidatorInvocation> validators;
 
     public ResourcePropertyBuilder() {
         validators = new ArrayList<ValidatorInvocation>();
@@ -42,7 +41,7 @@ public class ResourcePropertyBuilder {
         this.multiple = false;
     }
 
-    public @Nonnull ResourcePropertyBuilder nameRegex(String nameRegex) {
+    public @NotNull ResourcePropertyBuilder nameRegex(String nameRegex) {
         this.nameRegex = nameRegex;
         return this;
     }
@@ -50,7 +49,7 @@ public class ResourcePropertyBuilder {
     /** 
      * should only be used from test classes 
      */
-    public @Nonnull ResourcePropertyBuilder validator(@Nonnull String id, Integer severity, String... parametersNamesAndValues) {
+    public @NotNull ResourcePropertyBuilder validator(@NotNull String id, Integer severity, String... parametersNamesAndValues) {
         if (parametersNamesAndValues.length % 2 != 0) {
             throw new IllegalArgumentException("array parametersNamesAndValues must be even! (first specify name then value, separated by comma)");
         }
@@ -62,22 +61,22 @@ public class ResourcePropertyBuilder {
         return validator(id, severity, parameterMap);
     }
     
-    public @Nonnull ResourcePropertyBuilder validator(@Nonnull String id, Integer severity, @Nonnull Map<String, Object> parameters) {
+    public @NotNull ResourcePropertyBuilder validator(@NotNull String id, Integer severity, @NotNull Map<String, Object> parameters) {
         validators.add(new ValidatorInvocationImpl(id, parameters, severity));
         return this;
     }
 
-    public @Nonnull ResourcePropertyBuilder optional() {
+    public @NotNull ResourcePropertyBuilder optional() {
         this.optional = true;
         return this;
     }
 
-    public @Nonnull ResourcePropertyBuilder multiple() {
+    public @NotNull ResourcePropertyBuilder multiple() {
         this.multiple = true;
         return this;
     }
 
-    public @Nonnull ResourceProperty build(@Nonnull String name) {
+    public @NotNull ResourceProperty build(@NotNull String name) {
         return new ResourcePropertyImpl(name, nameRegex, multiple, !optional, validators);
     }
 }

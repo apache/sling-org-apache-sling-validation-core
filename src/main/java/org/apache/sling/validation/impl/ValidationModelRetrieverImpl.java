@@ -23,9 +23,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import org.apache.commons.collections4.trie.PatriciaTrie;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.LoginException;
@@ -35,6 +32,8 @@ import org.apache.sling.validation.impl.model.MergedValidationModel;
 import org.apache.sling.validation.model.ValidationModel;
 import org.apache.sling.validation.model.spi.ValidationModelProvider;
 import org.apache.sling.validation.model.spi.ValidationModelRetriever;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.FieldOption;
@@ -69,8 +68,8 @@ public class ValidationModelRetrieverImpl implements ValidationModelRetriever {
      * 
      * @see org.apache.sling.validation.impl.ValidationModelRetriever#getModels(java.lang.String, java.lang.String)
      */
-    @CheckForNull
-    public ValidationModel getValidationModel(@Nonnull String resourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
+    @Nullable
+    public ValidationModel getValidationModel(@NotNull String resourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
         // first get model for exactly the requested resource type
         ValidationModel baseModel = getModel(resourceType, resourcePath);
         String currentResourceType = resourceType;
@@ -105,7 +104,7 @@ public class ValidationModelRetrieverImpl implements ValidationModelRetriever {
         return baseModel;
     }
 
-    private @CheckForNull ValidationModel getModel(@Nonnull String resourceType, String resourcePath) {
+    private @Nullable ValidationModel getModel(@NotNull String resourceType, String resourcePath) {
         PatriciaTrie<ValidationModel> modelsForResourceType = fillTrieForResourceType(resourceType);
         ValidationModel model = null;
         // for empty/null resource paths, always return the entry stored for ""
@@ -125,7 +124,7 @@ public class ValidationModelRetrieverImpl implements ValidationModelRetriever {
         return model;
     }
 
-    private @Nonnull PatriciaTrie<ValidationModel> fillTrieForResourceType(@Nonnull String resourceType) {
+    private @NotNull PatriciaTrie<ValidationModel> fillTrieForResourceType(@NotNull String resourceType) {
         // create a new (empty) trie
         PatriciaTrie<ValidationModel> modelsForResourceType = new PatriciaTrie<ValidationModel>();
 

@@ -21,11 +21,10 @@ package org.apache.sling.validation.impl;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import org.apache.sling.validation.impl.util.ValidatorTypeUtil;
 import org.apache.sling.validation.spi.Validator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +36,12 @@ import org.slf4j.LoggerFactory;
 public class ValidatorMap {
 
     final static class ValidatorMetadata implements Comparable<ValidatorMetadata> {
-        protected final @Nonnull Validator<?> validator;
+        protected final @NotNull Validator<?> validator;
         // default severity of the validator
         protected final Integer severity;
-        protected final @Nonnull Class<?> type;
+        protected final @NotNull Class<?> type;
         /** used for comparison, to sort by service ranking and id */
-        protected final @Nonnull ServiceReference<Validator<?>> serviceReference;
+        protected final @NotNull ServiceReference<Validator<?>> serviceReference;
 
         public ValidatorMetadata(Validator<?> validator, ServiceReference<Validator<?>> serviceReference, Integer severity) {
             this.validator = validator;
@@ -101,15 +100,15 @@ public class ValidatorMap {
                     + "]";
         }
 
-        public @Nonnull Validator<?> getValidator() {
+        public @NotNull Validator<?> getValidator() {
             return validator;
         }
 
-        public @CheckForNull Integer getSeverity() {
+        public @Nullable Integer getSeverity() {
             return severity;
         }
 
-        public @Nonnull Class<?> getType() {
+        public @NotNull Class<?> getType() {
             return type;
         }
         
@@ -155,13 +154,13 @@ public class ValidatorMap {
         return (Integer) severity;
     }
 
-    public void put(@Nonnull Map<String, Object> properties, @Nonnull Validator<?> validator, ServiceReference<Validator<?>> serviceReference) {
+    public void put(@NotNull Map<String, Object> properties, @NotNull Validator<?> validator, ServiceReference<Validator<?>> serviceReference) {
         String validatorId = getValidatorIdFromServiceProperties(properties, validator.getClass(), serviceReference);
         Integer severity = getValidatorSeverityFromServiceProperties(properties, validator, serviceReference);
         put(validatorId, validator, serviceReference, severity);
     }
 
-    void put(@Nonnull String id, @Nonnull Validator<?> validator, ServiceReference<Validator<?>> serviceReference, Integer severity) {
+    void put(@NotNull String id, @NotNull Validator<?> validator, ServiceReference<Validator<?>> serviceReference, Integer severity) {
         // create new entry
         ValidatorMetadata entry = new ValidatorMetadata(validator, serviceReference, severity);
         if (validatorMap.containsKey(id)) {
@@ -181,13 +180,13 @@ public class ValidatorMap {
         validatorMap.put(id, entry);
     }
 
-    public void update(@Nonnull Map<String, Object> properties, @Nonnull Validator<?> validator, ServiceReference<Validator<?>> serviceReference) {
+    public void update(@NotNull Map<String, Object> properties, @NotNull Validator<?> validator, ServiceReference<Validator<?>> serviceReference) {
         String validatorId = getValidatorIdFromServiceProperties(properties, validator.getClass(), serviceReference);
         Integer severity = getValidatorSeverityFromServiceProperties(properties, validator, serviceReference);
         update(validatorId, validator, serviceReference, severity);
     }
 
-    void update(@Nonnull String id, @Nonnull Validator<?> validator, ServiceReference<Validator<?>> serviceReference, Integer severity) {
+    void update(@NotNull String id, @NotNull Validator<?> validator, ServiceReference<Validator<?>> serviceReference, Integer severity) {
         LOG.info("Updating validator with id '{}'", id);
         // the id might have been changed, therefore remove old entry by looking up the service reference!
         remove(serviceReference);
@@ -205,7 +204,7 @@ public class ValidatorMap {
         return false;
     }
 
-    public boolean remove(@Nonnull Map<String, Object> properties, @Nonnull Validator<?> validator, ServiceReference<Validator<?>> serviceReference) {
+    public boolean remove(@NotNull Map<String, Object> properties, @NotNull Validator<?> validator, ServiceReference<Validator<?>> serviceReference) {
         String validatorId = getValidatorIdFromServiceProperties(properties, validator.getClass(), serviceReference);
         return remove(validatorId, serviceReference);
     }

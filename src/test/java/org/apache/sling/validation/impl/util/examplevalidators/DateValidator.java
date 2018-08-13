@@ -20,19 +20,18 @@ package org.apache.sling.validation.impl.util.examplevalidators;
 
 import java.util.Date;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.validation.ValidationResult;
 import org.apache.sling.validation.SlingValidationException;
 import org.apache.sling.validation.spi.ValidatorContext;
 import org.apache.sling.validation.spi.Validator;
 import org.apache.sling.validation.spi.support.DefaultValidationResult;
+import org.jetbrains.annotations.NotNull;
 
 public class DateValidator implements Validator<Date> {
 
     @Override
-    public @Nonnull ValidationResult validate(@Nonnull Date data, @Nonnull ValidatorContext context, @Nonnull ValueMap arguments) throws SlingValidationException {
+    public @NotNull ValidationResult validate(@NotNull Date data, @NotNull ValidatorContext context, @NotNull ValueMap arguments) throws SlingValidationException {
         return DefaultValidationResult.VALID;
     }
 

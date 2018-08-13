@@ -18,11 +18,10 @@
  */
 package org.apache.sling.validation.impl;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.validation.ValidationResult;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,7 @@ public class ResourceToValidationResultAdapterFactory implements AdapterFactory 
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourceToValidationResultAdapterFactory.class);
     
-    private static final @Nonnull String KEY_RESOURCE_METADATA = "sling.validation.result";
+    private static final @NotNull String KEY_RESOURCE_METADATA = "sling.validation.result";
 
     @SuppressWarnings("unchecked")
     public <AdapterType> AdapterType getAdapter(Object adaptable, Class<AdapterType> type) {

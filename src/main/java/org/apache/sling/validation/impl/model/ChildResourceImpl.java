@@ -23,23 +23,22 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.validation.model.ChildResource;
 import org.apache.sling.validation.model.ResourceProperty;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Implements a {@link ChildResource}
  */
 public class ChildResourceImpl implements ChildResource {
 
-    private final @Nonnull String name;
+    private final @NotNull String name;
     private final Pattern namePattern;
-    private final @Nonnull List<ResourceProperty> properties;
-    private final @Nonnull List<ChildResource> children;
+    private final @NotNull List<ResourceProperty> properties;
+    private final @NotNull List<ChildResource> children;
     private final boolean isRequired;
 
-    public ChildResourceImpl(@Nonnull String name, String nameRegex, boolean isRequired, @Nonnull List<ResourceProperty> properties, @Nonnull List<ChildResource> children) {
+    public ChildResourceImpl(@NotNull String name, String nameRegex, boolean isRequired, @NotNull List<ResourceProperty> properties, @NotNull List<ChildResource> children) {
         if (nameRegex != null) {
             try {
                 this.namePattern = Pattern.compile(nameRegex);
@@ -56,12 +55,12 @@ public class ChildResourceImpl implements ChildResource {
     }
 
     @Override
-    public @Nonnull String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
     @Override
-    public @Nonnull Collection<ResourceProperty> getProperties() {
+    public @NotNull Collection<ResourceProperty> getProperties() {
         return properties;
     }
 
@@ -70,7 +69,7 @@ public class ChildResourceImpl implements ChildResource {
         return namePattern;
     }
     
-    public @Nonnull Collection<ChildResource> getChildren() {
+    public @NotNull Collection<ChildResource> getChildren() {
         return children;
     }
 

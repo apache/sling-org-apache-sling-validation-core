@@ -29,9 +29,6 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
@@ -52,6 +49,8 @@ import org.apache.sling.validation.model.ValidationModel;
 import org.apache.sling.validation.model.spi.ValidationModelRetriever;
 import org.apache.sling.validation.spi.ValidatorContext;
 import org.apache.sling.validation.spi.Validator;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -68,12 +67,12 @@ import org.slf4j.LoggerFactory;
 public class ValidationServiceImpl implements ValidationService{
 
     /** Keys whose values are defined in the JCR resource bundle contained in the content-repository section of this bundle */
-    protected static final @Nonnull String I18N_KEY_WRONG_PROPERTY_TYPE = "sling.validator.wrong-property-type";
-    protected static final @Nonnull String I18N_KEY_EXPECTED_MULTIVALUE_PROPERTY = "sling.validator.multi-value-property-required";
-    protected static final @Nonnull String I18N_KEY_MISSING_REQUIRED_PROPERTY_WITH_NAME = "sling.validator.missing-required-property-with-name";
-    protected static final @Nonnull String I18N_KEY_MISSING_REQUIRED_PROPERTY_MATCHING_PATTERN = "sling.validator.missing-required-property-matching-pattern";
-    protected static final @Nonnull String I18N_KEY_MISSING_REQUIRED_CHILD_RESOURCE_WITH_NAME = "sling.validator.missing-required-child-resource-with-name";
-    protected static final @Nonnull String I18N_KEY_MISSING_REQUIRED_CHILD_RESOURCE_MATCHING_PATTERN = "sling.validator.missing-required-child-resource-matching-pattern";
+    protected static final @NotNull String I18N_KEY_WRONG_PROPERTY_TYPE = "sling.validator.wrong-property-type";
+    protected static final @NotNull String I18N_KEY_EXPECTED_MULTIVALUE_PROPERTY = "sling.validator.multi-value-property-required";
+    protected static final @NotNull String I18N_KEY_MISSING_REQUIRED_PROPERTY_WITH_NAME = "sling.validator.missing-required-property-with-name";
+    protected static final @NotNull String I18N_KEY_MISSING_REQUIRED_PROPERTY_MATCHING_PATTERN = "sling.validator.missing-required-property-matching-pattern";
+    protected static final @NotNull String I18N_KEY_MISSING_REQUIRED_CHILD_RESOURCE_WITH_NAME = "sling.validator.missing-required-child-resource-with-name";
+    protected static final @NotNull String I18N_KEY_MISSING_REQUIRED_CHILD_RESOURCE_MATCHING_PATTERN = "sling.validator.missing-required-child-resource-matching-pattern";
 
     private static final Logger LOG = LoggerFactory.getLogger(ValidationServiceImpl.class);
     
@@ -81,7 +80,7 @@ public class ValidationServiceImpl implements ValidationService{
     ValidationModelRetriever modelRetriever;
     
     /** List of all known validators (key=id of validator) */
-    @Nonnull
+    @NotNull
     final ValidatorMap validatorMap;
     
     Collection<String> searchPaths;
@@ -124,18 +123,18 @@ public class ValidationServiceImpl implements ValidationService{
     }
 
     @Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY, policy=ReferencePolicy.DYNAMIC)
-    protected void addValidator(@Nonnull Validator<?> validator, Map<String, Object> properties, ServiceReference<Validator<?>> serviceReference) {
+    protected void addValidator(@NotNull Validator<?> validator, Map<String, Object> properties, ServiceReference<Validator<?>> serviceReference) {
         validatorMap.put(properties, validator, serviceReference);
     }
 
-    protected void removeValidator(@Nonnull Validator<?> validator, Map<String, Object> properties, ServiceReference<Validator<?>> serviceReference) {
+    protected void removeValidator(@NotNull Validator<?> validator, Map<String, Object> properties, ServiceReference<Validator<?>> serviceReference) {
         validatorMap.remove(properties, validator, serviceReference);
     }
     
     /** 
      * Necessary to deal with property changes which do not lead to service restarts (when a modified method is provided)
      */
-    protected void updatedValidator(@Nonnull Validator<?> validator, Map<String, Object> properties, ServiceReference<Validator<?>> serviceReference) {
+    protected void updatedValidator(@NotNull Validator<?> validator, Map<String, Object> properties, ServiceReference<Validator<?>> serviceReference) {
         validatorMap.update(properties, validator, serviceReference);
     }
 
@@ -143,7 +142,7 @@ public class ValidationServiceImpl implements ValidationService{
 
     // ValidationService ###################################################################################################################
     
-    public @CheckForNull ValidationModel getValidationModel(@Nonnull String validatedResourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
+    public @Nullable ValidationModel getValidationModel(@NotNull String validatedResourceType, String resourcePath, boolean considerResourceSuperTypeModels) {
         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=459256
         if (validatedResourceType == null) {
             throw new IllegalArgumentException("ValidationService.getValidationModel - cannot accept null as resource type. Resource path was: " + resourcePath);
@@ -161,7 +160,7 @@ public class ValidationServiceImpl implements ValidationService{
      * @return a relative resource type (without the leading search path)
      * @throws IllegalArgumentException in case the resource type is starting with a "/" but not with any of the search paths.
      */
-    protected @Nonnull String getRelativeResourceType(@Nonnull String resourceType) throws IllegalArgumentException {
+    protected @NotNull String getRelativeResourceType(@NotNull String resourceType) throws IllegalArgumentException {
         if (resourceType.startsWith("/")) {
             LOG.debug("try to strip the search path from the resource type");
             for (String searchPath : searchPaths) {
@@ -179,16 +178,16 @@ public class ValidationServiceImpl implements ValidationService{
     }
 
     @Override
-    public @CheckForNull ValidationModel getValidationModel(@Nonnull Resource resource, boolean considerResourceSuperTypeModels) {
+    public @Nullable ValidationModel getValidationModel(@NotNull Resource resource, boolean considerResourceSuperTypeModels) {
         return getValidationModel(resource.getResourceType(), resource.getPath(), considerResourceSuperTypeModels);
     }
 
     @Override
-    public @Nonnull ValidationResult validate(@Nonnull Resource resource, @Nonnull ValidationModel model) {
+    public @NotNull ValidationResult validate(@NotNull Resource resource, @NotNull ValidationModel model) {
         return validate(resource, model, "");
     }
 
-    private @Nonnull ResourceBundle getDefaultResourceBundle() {
+    private @NotNull ResourceBundle getDefaultResourceBundle() {
         Locale locale = Locale.ENGLISH;
         // go from highest ranked to lowest ranked providers
         for (int i = resourceBundleProviders.size() - 1; i >= 0; i--) {
@@ -211,7 +210,7 @@ public class ValidationServiceImpl implements ValidationService{
         return configuration.defaultSeverity();
     }
 
-    protected @Nonnull ValidationResult validate(@Nonnull Resource resource, @Nonnull ValidationModel model, @Nonnull String relativePath) {
+    protected @NotNull ValidationResult validate(@NotNull Resource resource, @NotNull ValidationModel model, @NotNull String relativePath) {
         if (resource == null || model == null || relativePath == null) {
             throw new IllegalArgumentException("ValidationService.validate - cannot accept null parameters");
         }
@@ -245,7 +244,7 @@ public class ValidationServiceImpl implements ValidationService{
      * @param result
      * @param childResources
      */
-    private void validateChildren(@Nonnull Resource resource, @Nonnull String relativePath, @Nonnull Collection<ChildResource> childResources, @Nonnull CompositeValidationResult result, @Nonnull ResourceBundle defaultResourceBundle) {
+    private void validateChildren(@NotNull Resource resource, @NotNull String relativePath, @NotNull Collection<ChildResource> childResources, @NotNull CompositeValidationResult result, @NotNull ResourceBundle defaultResourceBundle) {
         // validate children resources, if any
         for (ChildResource childResource : childResources) {
             // if a pattern is set we validate all children matching that pattern
@@ -273,8 +272,8 @@ public class ValidationServiceImpl implements ValidationService{
         }
     }
 
-    private void validateChildResource(@Nonnull Resource resource, @Nonnull String relativePathOfParent, @Nonnull ChildResource childResource, @Nonnull CompositeValidationResult result, @Nonnull ResourceBundle defaultResourceBundle) {
-        final @Nonnull String relativePath;
+    private void validateChildResource(@NotNull Resource resource, @NotNull String relativePathOfParent, @NotNull ChildResource childResource, @NotNull CompositeValidationResult result, @NotNull ResourceBundle defaultResourceBundle) {
+        final @NotNull String relativePath;
         if (relativePathOfParent.isEmpty()) {
             relativePath = resource.getName();
         } else {
@@ -285,7 +284,7 @@ public class ValidationServiceImpl implements ValidationService{
     }
 
     @Override
-    public @Nonnull ValidationResult validate(@Nonnull ValueMap valueMap, @Nonnull ValidationModel model) {
+    public @NotNull ValidationResult validate(@NotNull ValueMap valueMap, @NotNull ValidationModel model) {
         if (valueMap == null || model == null) {
             throw new IllegalArgumentException("ValidationResult.validate - cannot accept null parameters");
         }
@@ -296,15 +295,15 @@ public class ValidationServiceImpl implements ValidationService{
     }    
 
     @Override
-    public @Nonnull ValidationResult validateResourceRecursively(@Nonnull Resource resource, boolean enforceValidation, Predicate<Resource> filter, boolean considerResourceSuperTypeModels)
+    public @NotNull ValidationResult validateResourceRecursively(@NotNull Resource resource, boolean enforceValidation, Predicate<Resource> filter, boolean considerResourceSuperTypeModels)
             throws IllegalStateException, IllegalArgumentException, SlingValidationException {
         ValidationResourceVisitor visitor = new ValidationResourceVisitor(this, resource.getPath(), enforceValidation, filter, considerResourceSuperTypeModels);
         visitor.accept(resource);
         return visitor.getResult();
     }
 
-    private void validateValueMap(ValueMap valueMap, Resource resource, @Nonnull String relativePath, @Nonnull Collection<ResourceProperty> resourceProperties,
-            @Nonnull CompositeValidationResult result, @Nonnull ResourceBundle defaultResourceBundle) {
+    private void validateValueMap(ValueMap valueMap, Resource resource, @NotNull String relativePath, @NotNull Collection<ResourceProperty> resourceProperties,
+            @NotNull CompositeValidationResult result, @NotNull ResourceBundle defaultResourceBundle) {
         if (valueMap == null) {
             throw new IllegalArgumentException("ValueMap may not be null");
         }
@@ -327,7 +326,7 @@ public class ValidationServiceImpl implements ValidationService{
         }
     }
 
-    private void validatePropertyValue(@Nonnull String property, ValueMap valueMap, Resource resource, @Nonnull String relativePath, @Nonnull ResourceProperty resourceProperty, @Nonnull CompositeValidationResult result, @Nonnull ResourceBundle defaultResourceBundle) {
+    private void validatePropertyValue(@NotNull String property, ValueMap valueMap, Resource resource, @NotNull String relativePath, @NotNull ResourceProperty resourceProperty, @NotNull CompositeValidationResult result, @NotNull ResourceBundle defaultResourceBundle) {
         Object fieldValues = valueMap.get(property);
         if (fieldValues == null) {
             if (resourceProperty.isRequired()) {
@@ -376,7 +375,7 @@ public class ValidationServiceImpl implements ValidationService{
                 validateValue(result, typedValue, property, relativePath, valueMap, resource, validatorMetadata.getValidator(), validatorInvocation.getParameters(), defaultResourceBundle, severity);
             } else {
                 // call validate for each entry in the array (supports both singlevalue and multivalue)
-                @Nonnull Object[] array = (Object[])typedValue;
+                @NotNull Object[] array = (Object[])typedValue;
                 if (array.length == 1) {
                    validateValue(result, array[0], property, relativePath, valueMap, resource, validatorMetadata.getValidator(), validatorInvocation.getParameters(), defaultResourceBundle, severity);
                 } else {
@@ -390,7 +389,7 @@ public class ValidationServiceImpl implements ValidationService{
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private void validateValue(CompositeValidationResult result, @Nonnull Object value, String property, String relativePath, @Nonnull ValueMap valueMap, Resource resource, @Nonnull Validator validator, ValueMap validatorParameters, @Nonnull ResourceBundle defaultResourceBundle, int severity) {
+    private void validateValue(CompositeValidationResult result, @NotNull Object value, String property, String relativePath, @NotNull ValueMap valueMap, Resource resource, @NotNull Validator validator, ValueMap validatorParameters, @NotNull ResourceBundle defaultResourceBundle, int severity) {
         try {
             ValidatorContext validationContext = new ValidatorContextImpl(relativePath + property, severity, valueMap, resource, defaultResourceBundle);
             ValidationResult validatorResult = ((Validator)validator).validate(value, validationContext, validatorParameters);

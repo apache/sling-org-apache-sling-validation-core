@@ -31,8 +31,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.SlingConstants;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.Resource;
@@ -47,6 +45,7 @@ import org.apache.sling.validation.model.ChildResource;
 import org.apache.sling.validation.model.ResourceProperty;
 import org.apache.sling.validation.model.ValidationModel;
 import org.apache.sling.validation.model.spi.ValidationModelProvider;
+import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
@@ -69,17 +68,17 @@ public class ResourceValidationModelProviderImpl implements ValidationModelProvi
     static final String[] TOPICS = { SlingConstants.TOPIC_RESOURCE_REMOVED, SlingConstants.TOPIC_RESOURCE_CHANGED,
             SlingConstants.TOPIC_RESOURCE_ADDED };
 
-    public static final @Nonnull String NAME_REGEX = "nameRegex";
-    public static final @Nonnull String CHILDREN = "children";
-    public static final @Nonnull String VALIDATOR_ARGUMENTS = "validatorArguments";
-    public static final @Nonnull String VALIDATORS = "validators";
-    public static final @Nonnull String OPTIONAL = "optional";
-    public static final @Nonnull String PROPERTY_MULTIPLE = "propertyMultiple";
-    public static final @Nonnull String PROPERTIES = "properties";
-    public static final @Nonnull String VALIDATION_MODEL_RESOURCE_TYPE = "sling/validation/model";
-    public static final @Nonnull String APPLICABLE_PATHS = "applicablePaths";
-    public static final @Nonnull String VALIDATING_RESOURCE_TYPE = "validatingResourceType";
-    public static final @Nonnull String SEVERITY = "severity";
+    public static final @NotNull String NAME_REGEX = "nameRegex";
+    public static final @NotNull String CHILDREN = "children";
+    public static final @NotNull String VALIDATOR_ARGUMENTS = "validatorArguments";
+    public static final @NotNull String VALIDATORS = "validators";
+    public static final @NotNull String OPTIONAL = "optional";
+    public static final @NotNull String PROPERTY_MULTIPLE = "propertyMultiple";
+    public static final @NotNull String PROPERTIES = "properties";
+    public static final @NotNull String VALIDATION_MODEL_RESOURCE_TYPE = "sling/validation/model";
+    public static final @NotNull String APPLICABLE_PATHS = "applicablePaths";
+    public static final @NotNull String VALIDATING_RESOURCE_TYPE = "validatingResourceType";
+    public static final @NotNull String SEVERITY = "severity";
 
     @Reference
     ResourceResolverFactory rrf = null;
@@ -190,7 +189,7 @@ public class ResourceValidationModelProviderImpl implements ValidationModelProvi
         }
     }
 
-    private String getResourceTypeOfValidationModel(@Nonnull String path) throws LoginException {
+    private String getResourceTypeOfValidationModel(@NotNull String path) throws LoginException {
         ResourceResolver resourceResolver = null;
         try {
             resourceResolver = rrf.getServiceResourceResolver(null);
@@ -216,7 +215,7 @@ public class ResourceValidationModelProviderImpl implements ValidationModelProvi
      * @see org.apache.sling.validation.model.spi.ValidationModelProvider#getModels(java.lang.String)
      */
     @Override
-    public @Nonnull List<ValidationModel> getValidationModels(@Nonnull String relativeResourceType) {
+    public @NotNull List<ValidationModel> getValidationModels(@NotNull String relativeResourceType) {
         List<ValidationModel> cacheEntry = validationModelCacheByResourceType.get(relativeResourceType);
         if (cacheEntry == null) {
             cacheEntry = doGetModels(relativeResourceType);
@@ -233,8 +232,8 @@ public class ResourceValidationModelProviderImpl implements ValidationModelProvi
      * @return a List of {@link ValidationModel}s. Never {@code null}, but might be empty collection in case no model for the given resource
      *         type could be found. Returns the models below "/apps" before the models below "/libs".
      * @throws IllegalStateException in case a validation model is found but it is invalid */
-    @Nonnull
-    private List<ValidationModel> doGetModels(@Nonnull String relativeResourceType) {
+    @NotNull
+    private List<ValidationModel> doGetModels(@NotNull String relativeResourceType) {
         List<ValidationModel> validationModels = new ArrayList<ValidationModel>();
         ResourceResolver resourceResolver = null;
         try {
@@ -284,7 +283,7 @@ public class ResourceValidationModelProviderImpl implements ValidationModelProvi
      * @param propertiesResource the resource identifying the properties node from a validation model's structure (might be {@code null})
      * @return a set of properties or an empty set if no properties are defined
      * @see ResourceProperty */
-    private @Nonnull List<ResourceProperty> buildProperties(@Nonnull Resource propertiesResource) {
+    private @NotNull List<ResourceProperty> buildProperties(@NotNull Resource propertiesResource) {
         List<ResourceProperty> properties = new ArrayList<ResourceProperty>();
         if (propertiesResource != null) {
             for (Resource propertyResource : propertiesResource.getChildren()) {
@@ -364,7 +363,7 @@ public class ResourceValidationModelProviderImpl implements ValidationModelProvi
      * @param rootResource the model's resource from which to search for children (this resource has to have a
      *            {@link ResourceValidationModelProviderImpl#CHILDREN} node directly underneath it)
      * @return a list of all the children resources; the list will be empty if there are no children resources */
-    private @Nonnull List<ChildResource> buildChildren(@Nonnull Resource modelResource, @Nonnull Resource rootResource) {
+    private @NotNull List<ChildResource> buildChildren(@NotNull Resource modelResource, @NotNull Resource rootResource) {
         List<ChildResource> children = new ArrayList<ChildResource>();
         Resource childrenResource = rootResource.getChild(ResourceValidationModelProviderImpl.CHILDREN);
         if (childrenResource != null) {

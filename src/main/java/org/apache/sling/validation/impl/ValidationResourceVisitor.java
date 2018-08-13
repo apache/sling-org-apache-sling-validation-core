@@ -20,13 +20,12 @@ package org.apache.sling.validation.impl;
 
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-
 import org.apache.sling.api.resource.AbstractResourceVisitor;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.validation.ValidationResult;
 import org.apache.sling.validation.model.ValidationModel;
+import org.jetbrains.annotations.NotNull;
 
 public class ValidationResourceVisitor extends AbstractResourceVisitor {
 
@@ -34,7 +33,7 @@ public class ValidationResourceVisitor extends AbstractResourceVisitor {
     private final String rootResourcePath;
     private final boolean enforceValidation;
     private final boolean considerResourceSuperTypeModels;
-    private final @Nonnull CompositeValidationResult result;
+    private final @NotNull CompositeValidationResult result;
     private final Predicate<Resource> filter;
 
     public ValidationResourceVisitor(ValidationServiceImpl validationService, String rootResourcePath, boolean enforceValidation, Predicate<Resource> filter,  boolean considerResourceSuperTypeModels) {
@@ -60,7 +59,7 @@ public class ValidationResourceVisitor extends AbstractResourceVisitor {
             }
             // calculate the property name correctly from the root
             // the relative path must not end with a slash and not start with a slash
-            @Nonnull final String relativePath;
+            @NotNull final String relativePath;
             if (resource.getPath().startsWith(rootResourcePath)) {
                 relativePath = resource.getPath().substring(rootResourcePath.length());
             } else {
@@ -75,7 +74,7 @@ public class ValidationResourceVisitor extends AbstractResourceVisitor {
      * 
      * @return {@code true} in case the given resource should have its own Sling Validation model
      */
-    private boolean isValidSubResource(@Nonnull Resource resource) {
+    private boolean isValidSubResource(@NotNull Resource resource) {
         if (ResourceUtil.isNonExistingResource(resource)) {
             return false;
         }
@@ -85,7 +84,7 @@ public class ValidationResourceVisitor extends AbstractResourceVisitor {
         return true;
     }
 
-    public @Nonnull CompositeValidationResult getResult() {
+    public @NotNull CompositeValidationResult getResult() {
         return result;
     }
 
