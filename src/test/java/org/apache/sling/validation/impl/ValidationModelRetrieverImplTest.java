@@ -140,6 +140,41 @@ public class ValidationModelRetrieverImplTest {
     }
 
     @Test
+    public void testGetModelWithApplicablePathOnRootMatching() {
+        applicablePathPerResourceType.put("test/type", "/content/site1");
+        applicablePathPerResourceType.put("test/type", "");
+        applicablePathPerResourceType.put("test/type", "/content/site1/subnode");
+
+        ValidationModel model = validationModelRetriever.getValidationModel("test/type", "/content/site2", false);
+        Assert.assertNotNull(model);
+        Assert.assertThat(model.getApplicablePaths(), Matchers.contains(""));
+    }
+
+    @Test
+    public void testGetModelWithApplicablePathOnRootMatching2() {
+        applicablePathPerResourceType.put("test/type", "/content/site1");
+        applicablePathPerResourceType.put("test/type", "/");
+        applicablePathPerResourceType.put("test/type", "/content/site1/subnode");
+
+        ValidationModel model = validationModelRetriever.getValidationModel("test/type", "/content/site2", false);
+        Assert.assertNotNull(model);
+        Assert.assertThat(model.getApplicablePaths(), Matchers.contains("/"));
+    }
+    
+    @Test
+    public void testGetModelWithInexactApplicablePathPath() {
+        applicablePathPerResourceType.put("test/type", "/content/site1");
+        applicablePathPerResourceType.put("test/type", "");
+        applicablePathPerResourceType.put("test/type", "/content/site1/a");
+
+        ValidationModel model = validationModelRetriever.getValidationModel("test/type", "/content/site1/b", false);
+        // SLING-7924
+        Assert.assertNotNull(model);
+        // make sure that the parent applicable path is returned
+        Assert.assertThat(model.getApplicablePaths(), Matchers.contains("/content/site1"));
+    }
+    
+    @Test
     public void testGetModelWithResourceInheritance() {
         // in case no super type is known, just return model
         applicablePathPerResourceType.put("test/type", "/content/site1");

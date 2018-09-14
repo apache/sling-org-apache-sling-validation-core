@@ -20,11 +20,12 @@ package org.apache.sling.validation.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
-import org.apache.commons.collections4.trie.PatriciaTrie;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.resource.LoginException;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ResourceResolverFactory;
@@ -105,16 +106,27 @@ public class ValidationModelRetrieverImpl implements ValidationModelRetriever {
     }
 
     private @Nullable ValidationModel getModel(@NotNull String resourceType, String resourcePath) {
-        PatriciaTrie<ValidationModel> modelsForResourceType = fillTrieForResourceType(resourceType);
+        Map<String, ValidationModel> modelsForResourceType = fillMapForResourceType(resourceType);
         ValidationModel model = null;
         // for empty/null resource paths, always return the entry stored for ""
         if (StringUtils.isEmpty(resourcePath)) {
             model = modelsForResourceType.get("");
         } else {
             // get longest prefix entry, which still matches
-            SortedMap<String, ValidationModel> modelMap = modelsForResourceType.subMap("", resourcePath + "/");
-            if (!modelMap.isEmpty()) {
-                model =  modelMap.get(modelMap.lastKey());
+            // go to parent
+            String parentResourcePath = resourcePath;
+            while (!parentResourcePath.equals("/")) {
+                model = modelsForResourceType.get(parentResourcePath);
+                if (model != null) {
+                    return model;
+                }
+                // this returns the root entry "/" for root path "/"
+                parentResourcePath = Text.getRelativeParent(parentResourcePath, 1);
+            }
+            // now check for both the root path "/" and the empty path!
+            model = modelsForResourceType.get(parentResourcePath);
+            if (model == null) {
+                model = modelsForResourceType.get("");
             }
         }
         if (model == null && !modelsForResourceType.isEmpty()) {
@@ -124,9 +136,9 @@ public class ValidationModelRetrieverImpl implements ValidationModelRetriever {
         return model;
     }
 
-    private @NotNull PatriciaTrie<ValidationModel> fillTrieForResourceType(@NotNull String resourceType) {
-        // create a new (empty) trie
-        PatriciaTrie<ValidationModel> modelsForResourceType = new PatriciaTrie<ValidationModel>();
+    private @NotNull Map<String, ValidationModel> fillMapForResourceType(@NotNull String resourceType) {
+        // create a new map
+        Map<String, ValidationModel> modelsForResourceType = new HashMap<>();
 
         // fill trie with data from model providers (all models for the given resource type, independent of resource path)
         // lowest ranked model provider inserts first (i.e. higher ranked should overwrite)
