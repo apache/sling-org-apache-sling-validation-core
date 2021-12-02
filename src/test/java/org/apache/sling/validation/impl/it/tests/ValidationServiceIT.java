@@ -61,11 +61,9 @@ public class ValidationServiceIT {
         slingClient = new OsgiConsoleClient(uri, "admin", "admin");
         
         // wait until the model from the validation.test-services bundle has been deployed
-        slingClient.waitExists("/apps/sling/validation/models/model1", 20000, 200);
-        
+        slingClient.waitExists("/apps/sling/validation/models/model1", 60000, 200);
         // also wait for the contained OSGi services to be registered, (see https://issues.apache.org/jira/browse/SLING-7297)
-        // since this is not yet supported in a release version just wait wait until all services came up as well by adding a little sleep time on top
-        Thread.sleep(2000);
+        slingClient.waitComponentRegistered(ValidationPostOperation.class.getName(), 20000, 200);
     }
 
     @Test
