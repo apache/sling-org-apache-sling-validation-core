@@ -17,11 +17,11 @@
 #  under the License.
 #
 
-# must be the same feature name as the feature defined in slingstart to allow merging
+# must be the same feature name as the feature defined in starter to allow merging
 [feature name=sling-validation]
 # Dependencies
 [artifacts]
-  org.apache.sling/org.apache.sling.launchpad/9/slingstart
+  org.apache.sling/org.apache.sling.starter/11/slingstart
   # the following additional bundles have their versions specified in the pom.xml
   # this assures that the IT always runs against the right version
   org.apache.sling/org.apache.sling.validation.core
