@@ -195,12 +195,9 @@ public class ResourceValidationModelProviderImpl implements ValidationModelProvi
             resourceResolver = rrf.getServiceResourceResolver(null);
             Resource modelResource = resourceResolver.getResource(path);
             if (modelResource == null) {
-                throw new IllegalStateException("Can no longer access resource at " + path);
+                throw new IllegalStateException("Can not or no longer read resource at '" + path + "'. Please check privileges of service resource resolver with user id '" + resourceResolver.getUserID() + "'");
             }
-            ValueMap properties = modelResource.adaptTo(ValueMap.class);
-            if (properties == null) {
-                throw new IllegalStateException("Could not adapt resource at " + path + " to a ValueMap");
-            }
+            ValueMap properties = modelResource.getValueMap();
             return properties.get(VALIDATING_RESOURCE_TYPE, String.class);
         } finally {
             if (resourceResolver != null) {
