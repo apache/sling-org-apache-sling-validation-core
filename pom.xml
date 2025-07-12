@@ -224,8 +224,8 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <!-- need at least 3.8 for building with Java 11: https://issues.apache.org/jira/browse/LANG-1384 -->
-            <version>3.8</version>
+            <!-- need at least 3.18.0 for building with Java 11: https://issues.apache.org/jira/browse/LANG-1384 -->
+            <version>3.18.0</version>
             <scope>provided</scope>
         </dependency>
         <!-- for the SlingPostProcessor (https://issues.apache.org/jira/browse/SLING-594)-->
